@@ -48,4 +48,16 @@ public class WRandomTest {
             assert actualVariance < expectedVariance;
         }
     }
+
+    @Test
+    public void testExpectedAverage() {
+        for (int i = -2; i < 91; i+=2) {
+            double d = Math.pow(10, (i / 10.0));
+            double trunc_d = (double)((long)(d * 10)) / 10;
+            double avg = WRandom.getExpectedAverage(d);
+            double sig = Math.pow(10, Math.max(4, (long)Math.log10(d) + 1));
+            double trunc_avg = (double)((long)(avg * sig)) / sig;
+            System.out.println("d(" + trunc_d + "): " + trunc_avg);
+        }
+    }
 }

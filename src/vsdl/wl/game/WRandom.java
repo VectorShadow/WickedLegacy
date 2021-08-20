@@ -3,8 +3,19 @@ package vsdl.wl.game;
 import java.util.Random;
 
 public class WRandom {
+
+    private static final double WEIGHT_FLOOR = 1.0;
+
     private static Random random() {
         return new Random();
+    }
+
+    static double getExpectedAverage(double weight) {
+        double runningSum = 0;
+        for (int i = 0; i < 0x000fffff; ++i) {
+            runningSum += weightedRandom(weight);
+        }
+        return runningSum / (double) 0x000fffff;
     }
 
     public static double weightedRandom(double weight) {
@@ -12,8 +23,8 @@ public class WRandom {
             throw new IllegalArgumentException("Weight must be non-negative.");
         double rand = random().nextDouble();
         double limit = 1.0 / rand;
-        double adjustedWeight = rand * weight;
-        double weightedRatio = (adjustedWeight / (1.0 + adjustedWeight));
+        double adjustedWeight = rand * (WEIGHT_FLOOR + weight);
+        double weightedRatio = (adjustedWeight / (WEIGHT_FLOOR + adjustedWeight));
         double weightedResult = rand * limit * weightedRatio;
         return Math.max(weightedResult, rand);
     }
